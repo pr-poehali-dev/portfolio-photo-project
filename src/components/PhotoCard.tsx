@@ -5,24 +5,17 @@ interface PhotoCardProps {
   src: string;
   alt: string;
   title: string;
-  size?: 'small' | 'medium' | 'large';
+  orientation?: 'portrait' | 'landscape';
 }
 
-const PhotoCard = ({ src, alt, title, size = 'medium' }: PhotoCardProps) => {
+const PhotoCard = ({ src, alt, title, orientation = 'landscape' }: PhotoCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Определяем классы в зависимости от размера
-  const sizeClasses = {
-    small: 'col-span-1 row-span-1',
-    medium: 'col-span-1 row-span-1 md:col-span-2 md:row-span-1',
-    large: 'col-span-1 row-span-1 md:col-span-2 md:row-span-2'
-  }[size];
-
-  // Выбираем соотношение сторон в зависимости от размера
-  const aspectRatio = size === 'large' ? 1 : 4/3;
+  // Используем соотношение сторон 10:15 для портретных и 15:10 для пейзажных фото
+  const aspectRatio = orientation === 'portrait' ? 10/15 : 15/10;
 
   return (
-    <div className={`photo-card group animate-fade-in ${sizeClasses}`}>
+    <div className="photo-card group animate-fade-in">
       <div className="relative overflow-hidden">
         <AspectRatio ratio={aspectRatio} className="bg-gray-100 dark:bg-gray-800">
           {!isLoaded && (
