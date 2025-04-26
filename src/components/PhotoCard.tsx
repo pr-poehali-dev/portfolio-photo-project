@@ -5,18 +5,29 @@ interface PhotoCardProps {
   src: string;
   alt: string;
   title: string;
+  size?: 'small' | 'medium' | 'large';
 }
 
-const PhotoCard = ({ src, alt, title }: PhotoCardProps) => {
+const PhotoCard = ({ src, alt, title, size = 'medium' }: PhotoCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
+  // Определяем классы в зависимости от размера
+  const sizeClasses = {
+    small: 'col-span-1 row-span-1',
+    medium: 'col-span-1 row-span-1 md:col-span-2 md:row-span-1',
+    large: 'col-span-1 row-span-1 md:col-span-2 md:row-span-2'
+  }[size];
+
+  // Выбираем соотношение сторон в зависимости от размера
+  const aspectRatio = size === 'large' ? 1 : 4/3;
+
   return (
-    <div className="photo-card group animate-fade-in">
+    <div className={`photo-card group animate-fade-in ${sizeClasses}`}>
       <div className="relative overflow-hidden">
-        <AspectRatio ratio={4/3} className="bg-gray-100 dark:bg-gray-800">
+        <AspectRatio ratio={aspectRatio} className="bg-gray-100 dark:bg-gray-800">
           {!isLoaded && (
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 border-4 border-portfolio-primary border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-6 h-6 border-3 border-portfolio-primary border-t-transparent rounded-full animate-spin"></div>
             </div>
           )}
           <img
@@ -29,8 +40,8 @@ const PhotoCard = ({ src, alt, title }: PhotoCardProps) => {
           />
         </AspectRatio>
       </div>
-      <div className="photo-caption">
-        <h3 className="text-lg font-medium text-gray-800 dark:text-gray-200 transition-colors">{title}</h3>
+      <div className="photo-caption p-2">
+        <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors">{title}</h3>
       </div>
     </div>
   );
