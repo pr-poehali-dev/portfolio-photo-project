@@ -67,7 +67,7 @@ const PhotoGallery = () => {
         <h2 className="text-3xl font-bold mb-6 text-center text-portfolio-dark dark:text-white">
           Моя галерея
         </h2>
-        <div className="collage-grid">
+        <div className="collage-grid-seamless">
           {photos.map((photo) => (
             <PhotoCard
               key={photo.id}

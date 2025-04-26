@@ -40,7 +40,7 @@ const PhotoCard = ({ src, alt, title, size = 'medium' }: PhotoCardProps) => {
           />
         </AspectRatio>
       </div>
-      <div className="photo-caption p-2">
+      <div className="absolute bottom-0 left-0 right-0 photo-caption">
         <h3 className="text-sm font-medium text-gray-800 dark:text-gray-200 transition-colors">{title}</h3>
       </div>
     </div>
