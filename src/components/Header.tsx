@@ -1,92 +1,103 @@
-import { useState } from 'react';
+
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
+import { Moon, Sun, Menu, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { MoonIcon, SunIcon, MenuIcon, XIcon } from "lucide-react";
 
 const Header = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const toggleDarkMode = () => {
+  useEffect(() => {
+    // Проверяем текущую тему при монтировании
+    const isDark = document.documentElement.classList.contains('dark');
+    setIsDarkMode(isDark);
+  }, []);
+
+  const toggleTheme = () => {
     setIsDarkMode(!isDarkMode);
     document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDarkMode ? 'light' : 'dark');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white dark:bg-portfolio-dark shadow-sm">
-      <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <div className="flex items-center">
-          <h1 className="text-2xl font-bold text-portfolio-primary">Фотопортфолио</h1>
-        </div>
+    <header className="py-4 px-4 md:px-8 border-b border-gray-100 dark:border-gray-800 sticky top-0 bg-white dark:bg-gray-950 z-50">
+      <div className="container mx-auto">
+        <div className="flex justify-between items-center">
+          <Link to="/" className="font-bold text-xl text-gray-900 dark:text-white">
+            ФотоПортфолио
+          </Link>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden md:flex items-center space-x-6">
-          <a href="/" className="font-medium hover:text-portfolio-primary transition-colors">
-            Главная
-          </a>
-          <a href="#gallery" className="font-medium hover:text-portfolio-primary transition-colors">
-            Галерея
-          </a>
-          <a href="#about" className="font-medium hover:text-portfolio-primary transition-colors">
-            О проекте
-          </a>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={toggleDarkMode}
-            className="ml-2"
-          >
-            {isDarkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
-          </Button>
-        </nav>
-
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={toggleDarkMode}
-            className="mr-2"
-          >
-            {isDarkMode ? <SunIcon className="h-5 w-5" /> : <MoonIcon className="h-5 w-5" />}
-          </Button>
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-          >
-            {isMenuOpen ? <XIcon className="h-5 w-5" /> : <MenuIcon className="h-5 w-5" />}
-          </Button>
-        </div>
-      </div>
-
-      {/* Mobile Navigation */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white dark:bg-portfolio-dark shadow-lg animate-fade-in">
-          <div className="container mx-auto px-4 py-2 flex flex-col space-y-3">
-            <a 
-              href="/" 
-              className="py-2 font-medium hover:text-portfolio-primary transition-colors"
-              onClick={() => setIsMenuOpen(false)}
+          {/* Мобильное меню */}
+          <div className="flex md:hidden">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Переключить тему"
+              className="mr-2"
             >
-              Главная
-            </a>
-            <a 
-              href="#gallery" 
-              className="py-2 font-medium hover:text-portfolio-primary transition-colors"
-              onClick={() => setIsMenuOpen(false)}
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="icon"
+              onClick={toggleMenu}
+              aria-label="Меню"
             >
-              Галерея
-            </a>
-            <a 
-              href="#about" 
-              className="py-2 font-medium hover:text-portfolio-primary transition-colors"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              О проекте
-            </a>
+              {isMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            </Button>
           </div>
+
+          {/* Десктопное меню */}
+          <nav className="hidden md:flex items-center space-x-6">
+            <Link to="/" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+              Галерея
+            </Link>
+            <Link to="/upload" className="text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white">
+              Загрузить
+            </Link>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Переключить тему"
+            >
+              {isDarkMode ? <Sun className="h-5 w-5" /> : <Moon className="h-5 w-5" />}
+            </Button>
+          </nav>
         </div>
-      )}
+
+        {/* Мобильное меню (открывается) */}
+        {isMenuOpen && (
+          <nav className="md:hidden mt-4 py-4 border-t border-gray-100 dark:border-gray-800">
+            <ul className="space-y-4">
+              <li>
+                <Link 
+                  to="/" 
+                  className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Галерея
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/upload" 
+                  className="block text-gray-600 hover:text-gray-900 dark:text-gray-300 dark:hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  Загрузить
+                </Link>
+              </li>
+            </ul>
+          </nav>
+        )}
+      </div>
     </header>
   );
 };
